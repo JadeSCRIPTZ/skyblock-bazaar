@@ -1,39 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <title>SkyBlock Bazaar Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skyblock Bazaar Tracker - Profit Maxim</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-coins"></i>
+                <h1>Skyblock Bazaar Tracker</h1>
+            </div>
+            <p class="subtitle">Urmărește prețurile și găsește cele mai bune oportunități de profit</p>
+        </header>
 
-<div class="dashboard">
+        <main class="main-content">
+            <div class="controls">
+                <div class="filter-section">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Caută item...">
+                    </div>
+                    <div class="filter-controls">
+                        <select id="sortSelect" class="filter-select">
+                            <option value="profitMargin">Profit % (Desc)</option>
+                            <option value="profitMarginAsc">Profit % (Asc)</option>
+                            <option value="profitAbsolute">Profit Absolut (Desc)</option>
+                            <option value="instantSell">Vânzare Instant (Desc)</option>
+                            <option value="instantBuy">Cumpărare Instant (Desc)</option>
+                            <option value="name">Nume (A-Z)</option>
+                        </select>
+                        <button id="refreshBtn" class="refresh-btn">
+                            <i class="fas fa-sync-alt"></i> Actualizează
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="stats-bar">
+                    <div class="stat-card">
+                        <span class="stat-label">Iteme Analizate</span>
+                        <span id="totalItems" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Profit Mediu</span>
+                        <span id="avgProfit" class="stat-value">0%</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Top Profit</span>
+                        <span id="topProfit" class="stat-value">0%</span>
+                    </div>
+                </div>
+            </div>
 
-  <h1>SkyBlock Bazaar <span>BEST FLIPS</span></h1>
+            <div class="table-container">
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Preț Cumpărare</th>
+                            <th>Preț Vânzare</th>
+                            <th>Profit Unitate</th>
+                            <th>Profit %</th>
+                            <th>Volume (24h)</th>
+                            <th>Acțiuni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="itemsTableBody">
+                        <!-- Datele vor fi populate din JavaScript -->
+                    </tbody>
+                </table>
+            </div>
 
-  <div class="filters">
-    <input type="number" id="buyMin" placeholder="Buy min">
-    <input type="number" id="buyMax" placeholder="Buy max">
-    <input type="number" id="sellMin" placeholder="Sell min">
-    <input type="number" id="sellMax" placeholder="Sell max">
-    <button onclick="loadBazaar()">Apply</button>
-  </div>
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Se încarcă datele de la Bazaar...</p>
+            </div>
+        </main>
 
-  <table>
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Item</th>
-        <th>Buy</th>
-        <th>Sell</th>
-        <th>Profit</th>
-      </tr>
-    </thead>
-    <tbody id="table"></tbody>
-  </table>
+        <footer class="footer">
+            <p>Date preluate de la <strong>Hypixel SkyBlock API</strong> | Acest site nu este afiliat cu Hypixel</p>
+            <p class="github-link">
+                <i class="fab fa-github"></i>
+                <a href="https://github.com/username/skyblock-bazaar-tracker" target="_blank">Vezi codul sursă pe GitHub</a>
+            </p>
+        </footer>
+    </div>
 
-</div>
+    <!-- Modal pentru detalii -->
+    <div class="modal" id="itemModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modalItemName"></h2>
+            <div class="modal-stats">
+                <div class="modal-stat">
+                    <h3>Preț Instant Buy</h3>
+                    <p id="modalBuyPrice" class="price"></p>
+                </div>
+                <div class="modal-stat">
+                    <h3>Preț Instant Sell</h3>
+                    <p id="modalSellPrice" class="price"></p>
+                </div>
+                <div class="modal-stat">
+                    <h3>Profit Potențial</h3>
+                    <p id="modalProfit" class="profit"></p>
+                </div>
+                <div class="modal-stat">
+                    <h3>Volume Vânzări (24h)</h3>
+                    <p id="modalVolume"></p>
+                </div>
+            </div>
+            <div class="modal-chart">
+                <h3>Istoric Preț (Ultimele 7 zile)</h3>
+                <canvas id="priceChart"></canvas>
+            </div>
+        </div>
+    </div>
 
-<script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

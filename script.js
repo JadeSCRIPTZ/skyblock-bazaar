@@ -1,39 +1,39 @@
 const table = document.getElementById("bazaar");
-
-// Taxa bazaar ~1.25%
 const TAX = 0.9875;
 
-fetch("https://api.hypixel.net/skyblock/bazaar")
-  .then(res => res.json())
-  .then(data => {
-    const items = [];
+function fetchAndRender() {
+  fetch("https://api.hypixel.net/skyblock/bazaar")
+    .then(res => res.json())
+    .then(data => {
+      const items = [];
 
-    for (const name in data.products) {
-      const qs = data.products[name].quick_status;
+      for (const name in data.products) {
+        const qs = data.products[name].quick_status;
 
-      const buy = qs.buyPrice;
-      const sell = qs.sellPrice;
+        const buy = qs.buyPrice;
+        const sell = qs.sellPrice;
 
-      if (buy <= 0 || sell <= 0) continue;
+        if (buy <= 0 || sell <= 0) continue;
 
-      const profit = sell * TAX - buy;
+        const profit = sell * TAX - buy;
 
-      if (profit > 0) {
-        items.push({
-          name,
-          buy,
-          sell,
-          profit
-        });
+        if (profit > 0) {
+          items.push({
+            name,
+            buy,
+            sell,
+            profit
+          });
+        }
       }
-    }
 
-    items.sort((a, b) => b.profit - a.profit);
-    render(items);
-  })
-  .catch(err => {
-    console.error("Eroare API:", err);
-  });
+      items.sort((a, b) => b.profit - a.profit);
+      render(items);
+    })
+    .catch(err => {
+      console.error("Eroare API:", err);
+    });
+}
 
 function render(items) {
   table.innerHTML = "";
@@ -49,3 +49,9 @@ function render(items) {
     table.appendChild(row);
   });
 }
+
+// Prima dată încărcăm datele
+fetchAndRender();
+
+// Refresh automat la 20 secunde (20000 ms)
+setInterval(fetchAndRender, 20000);

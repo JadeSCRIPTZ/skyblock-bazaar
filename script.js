@@ -1,57 +1,68 @@
-const table = document.getElementById("bazaar");
-const TAX = 0.9875;
-
-function fetchAndRender() {
-  fetch("https://api.hypixel.net/skyblock/bazaar")
-    .then(res => res.json())
-    .then(data => {
-      const items = [];
-
-      for (const name in data.products) {
-        const qs = data.products[name].quick_status;
-
-        const buy = qs.buyPrice;
-        const sell = qs.sellPrice;
-
-        if (buy <= 0 || sell <= 0) continue;
-
-        const profit = sell * TAX - buy;
-
-        if (profit > 0) {
-          items.push({
-            name,
-            buy,
-            sell,
-            profit
-          });
-        }
-      }
-
-      items.sort((a, b) => b.profit - a.profit);
-      render(items);
-    })
-    .catch(err => {
-      console.error("Eroare API:", err);
-    });
+body {
+  background: #0b0e14;
+  color: #eaeaea;
+  font-family: Inter, Arial, sans-serif;
 }
 
-function render(items) {
-  table.innerHTML = "";
-
-  items.forEach(item => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${item.name}</td>
-      <td>${item.buy.toFixed(1)}</td>
-      <td>${item.sell.toFixed(1)}</td>
-      <td class="profit">+${item.profit.toFixed(1)}</td>
-    `;
-    table.appendChild(row);
-  });
+.dashboard {
+  max-width: 1100px;
+  margin: 40px auto;
+  background: #151a23;
+  padding: 25px;
+  border-radius: 14px;
 }
 
-// Prima dată încărcăm datele
-fetchAndRender();
+h1 {
+  color: #ff9800;
+  margin-bottom: 20px;
+}
 
-// Refresh automat la 20 secunde (20000 ms)
-setInterval(fetchAndRender, 20000);
+h1 span {
+  font-size: 14px;
+  background: #ff9800;
+  color: #000;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filters input {
+  background: #0b0e14;
+  border: 1px solid #2c313c;
+  color: white;
+  padding: 8px;
+  border-radius: 6px;
+  width: 100%;
+}
+
+.filters button {
+  background: #ff9800;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid #2c313c;
+  text-align: center;
+}
+
+th {
+  color: #aaa;
+}
+
+.profit {
+  color: #4caf50;
+}
